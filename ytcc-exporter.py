@@ -290,7 +290,7 @@ if __name__ == "__main__":
     for URL in vidl:
 
         #CHANNEL URL (we can derive the channel playlist from this with ease)
-        if isChannelURL(video):
+        if isChannelURL(URL):
             channel = URL
             #print("GOT CHANNEL REQUEST: {}".format(channel))
             tid = getUserFromChannel(channel)
@@ -298,11 +298,13 @@ if __name__ == "__main__":
             print(uPLink)
 
         #USER OR CUSTOM URL (the trickier case, but crucial for bigger channels)
-        elif isUserURL(video):
-            channel = URL
-            #print("GOT CHANNEL REQUEST: {}".format(channel))
+        elif isUserURL(URL):
+            user = URL
+            #print("GOT USER OR CUSTOM REQUEST: {}".format(user))
             tid = getUserFromChannel(channel)
             print(tid)
+
+            #print(uPLink)
 
         #Actual video url
         else: 
