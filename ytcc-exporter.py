@@ -51,6 +51,16 @@ def getUserFromChannel(s):
     splitUp=s.split('/')
     return splitUp[splitUp.index('channel')+1]
 
+def channelIDInvalid(id):
+    if id.find('youtube.com') != -1 or id.find('youtu.be') != -1:
+        return True
+    r=requests.get("https://www.youtube.com/channel/{}".format(id))
+    if r.status_code != 200 and r.status_code != 404:
+        return False
+    if r.text.find("empty-channel-banner") != -1:
+        return True
+    return False
+
 # Utilities End Here!
 
 class MyHTMLParser(HTMLParser):
@@ -278,7 +288,6 @@ if __name__ == "__main__":
 
     jobs = Queue()
     for URL in vidl:
-        video = URL
 
         #CHANNEL URL (we can derive the channel playlist from this with ease)
         if isChannelURL(video):
@@ -297,6 +306,7 @@ if __name__ == "__main__":
 
         #Actual video url
         else: 
+            video = URL
             try:
                 mkdir("out/"+video.strip())
             except:
