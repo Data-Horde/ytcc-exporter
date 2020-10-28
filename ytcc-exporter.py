@@ -51,6 +51,12 @@ def getUserFromChannel(s):
     splitUp=s.split('/')
     return splitUp[splitUp.index('channel')+1]
 
+def getUserFromUrl(s):
+    splitUp=s.split('/')
+    if 'user' in splitUp:
+        return splitUp[splitUp.index('user')+1]
+    return splitUp[splitUp.index('c')+1]
+
 def channelIDInvalid(id):
     if id.find('youtube.com') != -1 or id.find('youtu.be') != -1:
         return True
@@ -291,7 +297,15 @@ if __name__ == "__main__":
 
         #CHANNEL URL (we can derive the channel playlist from this with ease)
         if isChannelURL(URL):
+
             channel = URL
+
+            #IF CHANNEL ID INVALID CONTINUE
+            #if channelIDInvalid(getUserFromChannel(channel)):
+            #    continue
+
+            # TOO SLOW, GOING TO HAVE TO TRY/EXCEPT INTO PASS TO SEE SOME DECENT SPEED ON THIS ONE
+
             #print("GOT CHANNEL REQUEST: {}".format(channel))
             tid = getUserFromChannel(channel)
             uPLink = "https://www.youtube.com/playlist?list={}".format("UU"+tid[2:])
@@ -301,9 +315,12 @@ if __name__ == "__main__":
         elif isUserURL(URL):
             user = URL
             #print("GOT USER OR CUSTOM REQUEST: {}".format(user))
-            tid = getUserFromChannel(channel)
-            print(tid)
 
+            #Custom URL flag
+            customURL = (URL.find("www.youtube.com/c/") != -1)
+
+            tid = getUserFromUrl(user)
+            print(customURL,tid)
             #print(uPLink)
 
         #Actual video url
