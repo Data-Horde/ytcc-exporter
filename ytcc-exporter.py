@@ -67,6 +67,42 @@ def channelIDInvalid(id):
         return True
     return False
 
+#Get the channel id of the user
+def getuPLink(customURL,tid):
+    userPage=""
+    aborted=False
+    while True:
+        r = None
+
+        if customURL:
+            r = requests.get("https://www.youtube.com/c/{}/videos".format(tid))
+        else:
+            r = requests.get("https://www.youtube.com/user/{}/videos".format(tid))
+
+        if r.status_code != 200:
+            print("An error occured while trying to load the channel...")
+            print(r.status_code)
+            action=""
+            while action!='r' and action!='a'  :
+                action = input("Type r to retry or a to abort:\n")
+                action = action.rstrip().strip()
+            if action == 'r':
+                continue
+            elif action == 'a':
+                break
+
+        userPage = r.text
+        break
+    
+    if aborted:
+        return ("", False)
+
+    lazySearch = userPage.find('/channel/UC')
+    uP=userPage[lazySearch+9:userPage.find('"',lazySearch+10)]
+    #print("uP")
+    #print(uP)
+    uPLink = "https://www.youtube.com/playlist?list={}".format("UU"+uP[2:])
+    return (uPLink, True)
 # Utilities End Here!
 
 class MyHTMLParser(HTMLParser):
@@ -320,8 +356,13 @@ if __name__ == "__main__":
             customURL = (URL.find("www.youtube.com/c/") != -1)
 
             tid = getUserFromUrl(user)
-            print(customURL,tid)
-            #print(uPLink)
+            #print(customURL,tid)
+
+            uPLink, success = getuPLink(customURL,tid)
+            if not success:
+                print("Failed to retrieve {}".format(tid))
+            else:
+                print(uPLink)
 
         #Actual video url
         else: 
