@@ -44,6 +44,13 @@ def timedelta_to_sbv_timestamp(timedelta_timestamp):
 def isChannelURL(s):
     return (s.find("www.youtube.com/channel") != -1)
 
+def isUserURL(s):
+    return (s.find("www.youtube.com/user") != -1) or (s.find("www.youtube.com/c/") != -1)
+
+def getUserFromChannel(s):
+    splitUp=s.split('/')
+    return splitUp[splitUp.index('channel')+1]
+
 # Utilities End Here!
 
 class MyHTMLParser(HTMLParser):
@@ -270,17 +277,32 @@ if __name__ == "__main__":
         pass
 
     jobs = Queue()
-    for video in vidl:
-        if not isChannelURL(video): 
+    for URL in vidl:
+        video = URL
+
+        #CHANNEL URL (we can derive the channel playlist from this with ease)
+        if isChannelURL(video):
+            channel = URL
+            #print("GOT CHANNEL REQUEST: {}".format(channel))
+            tid = getUserFromChannel(channel)
+            uPLink = "https://www.youtube.com/playlist?list={}".format("UU"+tid[2:])
+            print(uPLink)
+
+        #USER OR CUSTOM URL (the trickier case, but crucial for bigger channels)
+        elif isUserURL(video):
+            channel = URL
+            #print("GOT CHANNEL REQUEST: {}".format(channel))
+            tid = getUserFromChannel(channel)
+            print(tid)
+
+        #Actual video url
+        else: 
             try:
                 mkdir("out/"+video.strip())
             except:
                 pass
             for lang in langs:
                 jobs.put((lang, video, "default"))
-        else:
-            channel = video
-            print("GOT CHANNEL REQUEST: {}".format(channel))
 
     subthreads = []
 
