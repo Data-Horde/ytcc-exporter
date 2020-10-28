@@ -8,3 +8,5 @@ Install the requirements in the requirements.txt file (`pip install -r requireme
 
 ## Usage
 Simply run `python3 ytcc-exporter.py` followed by a list of space-separated YouTube video IDs, and all community-contributed captioning drafts in all languages will be exported.
+
+If a channel (or user) url is provided, captions for up to 100 of the last videos are retrieved. 
