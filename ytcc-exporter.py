@@ -1,3 +1,18 @@
+from datetime import timedelta
+
+from json import dumps
+
+from gc import collect
+
+import requests
+
+from time import sleep
+
+# https://docs.python.org/3/library/html.parser.html
+from html.parser import HTMLParser
+# Beautiful Soup
+from bs4 import BeautifulSoup
+
 # This function adapted from https://github.com/cdown/srt/blob/11089f1e021f2e074d04c33fc7ffc4b7b52e7045/srt.py, lines 69 and 189 (MIT License)
 def timedelta_to_sbv_timestamp(timedelta_timestamp):
     r"""
@@ -24,19 +39,12 @@ def timedelta_to_sbv_timestamp(timedelta_timestamp):
     msecs = timedelta_timestamp.microseconds // MICROSECONDS_IN_MILLISECOND
     return "%1d:%02d:%02d.%03d" % (hrs, mins, secs, msecs)
 
+# Utility functions from backYouTubePyCollection (https://github.com/Data-Horde/backUpYouTubePyCollection)
 
-from datetime import timedelta
+def isChannelURL(s):
+    return (s.find("www.youtube.com/channel") != -1)
 
-from json import dumps
-
-from gc import collect
-
-import requests
-
-from time import sleep
-
-# https://docs.python.org/3/library/html.parser.html
-from html.parser import HTMLParser
+# Utilities End Here!
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
@@ -263,12 +271,16 @@ if __name__ == "__main__":
 
     jobs = Queue()
     for video in vidl:
-        try:
-            mkdir("out/"+video.strip())
-        except:
-            pass
-        for lang in langs:
-            jobs.put((lang, video, "default"))
+        if not isChannelURL(video): 
+            try:
+                mkdir("out/"+video.strip())
+            except:
+                pass
+            for lang in langs:
+                jobs.put((lang, video, "default"))
+        else:
+            channel = video
+            print("GOT CHANNEL REQUEST: {}".format(channel))
 
     subthreads = []
 
