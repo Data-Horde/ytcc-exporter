@@ -1,5 +1,4 @@
 # YouTube Community Contributed Captions Exporter
-## THIS REPO IS OUTDATED, SEE [THE INSTRUCTIONS IN THE NEWER REPO](https://github.com/Data-Horde/ytcc-archive#export-captions-and-titlesdescriptions-manually) INSTEAD.
 
 Export YouTube community-contributed captioning drafts to SBV files.
 
