@@ -1,4 +1,6 @@
 # YouTube Community Contributed Captions Exporter
+## The YouTube Community-Contributed captions editor is now offline as of October 28, 2020.
+## This archiving project is now complete, and we are working on sorting and finalizing the data. Thank you to everyone who contributed!
 
 Export YouTube community-contributed captioning drafts to SBV files.
 
